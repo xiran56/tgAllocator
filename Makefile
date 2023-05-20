@@ -25,4 +25,8 @@ $(OBJ_PREF)%.o: $(SRC_PREF)%.cpp
 	$(CXX) -c -o $@ $(INCLUDE) $< $(CXXFLAGS)
 
 clean:
-	del obj\*.o
+	rm -f $(OBJECTS)
+
+init:
+	mkdir obj
+	mkdir lib
