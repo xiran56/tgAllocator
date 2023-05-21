@@ -18,6 +18,15 @@ namespace memory {
             using difference_type = ptrdiff_t;
             using size_type = size_t;
 
+            template<class U, class AllocPolicy>
+            friend class StlAllocatorAdapter;
+
+            template<class U>
+            struct rebind {
+                using other = StlAllocatorAdapter<U, AllocationPolicy>;
+            };
+
+        public:
             StlAllocatorAdapter() noexcept = default;
 
             explicit StlAllocatorAdapter(AllocationPolicy *policy) noexcept : _policy { policy } {  }
