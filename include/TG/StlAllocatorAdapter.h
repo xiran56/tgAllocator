@@ -47,11 +47,11 @@ namespace memory {
                 return static_cast<T*>(this->_policy->allocate(objectsCount, alignof(T)));
             }
 
-            void deallocate(void *address, size_t objectsCount) noexcept {
+            void deallocate(void *ptr, size_t objectsCount) noexcept {
                 assert(this->_policy && "Uninitialized allocation policy!");
 
                 union {
-                    void *currentFreeAddressAsVoidPtr = address;
+                    void *currentFreeAddressAsVoidPtr = ptr;
 
                     uintptr_t currentFreeAddressAsUintPtr;
                 };
