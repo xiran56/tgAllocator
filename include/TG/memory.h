@@ -13,15 +13,6 @@ namespace memory {
 		return mem ? new (mem) T(args...) : nullptr;
 	}
 	
-    /* Перемещает stackObject в новый объект */
-
-    template<class T, class Allocator>
-    inline T* createObject(Allocator *allocator, T &&stackObject) {
-        void *mem = allocator->allocate(sizeof(T), alignof(T));
-
-        return mem ? new (mem) T(stackObject) : nullptr;
-    }
-
 	/* Удаляет объект */
 	
 	template<class T, class Allocator>
