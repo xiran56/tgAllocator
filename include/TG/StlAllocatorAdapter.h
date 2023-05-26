@@ -44,6 +44,7 @@ namespace memory {
             T* allocate(size_t objectsCount) noexcept {
                 assert(this->_policy && "Uninitialized allocation policy!");
 
+                return static_cast<T*>(this->_policy->allocate(sizeof(T) * objectsCount, alignof(T)));
             }
 
             void deallocate(void *ptr, size_t objectsCount) noexcept {

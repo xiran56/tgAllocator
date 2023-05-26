@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TG/FreeListAllocator.h"
+#include "TG/AllocatorBaseImpl.h"
 #include "TG/adjustment.h"
 #include <cassert>
 
@@ -32,13 +33,17 @@ void* memory::FreeListAllocator::allocate(size_t n, uint8_t alignment) {
 
         auto totalSize = n + adjustment;
 
+        /* Если размера текущего блока не хватает, пробуем следующий */
+            
         if (freeBlock.asPtr->size < totalSize) {
             prevFreeBlock = freeBlock.asPtr;
 
-            freeBlock.asPtr = nullptr;
+            freeBlock.asPtr = freeBlock.asPtr->next;
 
             continue;
         }
+
+        /* Тоже самое */
 
         if (freeBlock.asPtr->size - totalSize <= sizeof(AllocationHeader)) {
             totalSize = freeBlock.asPtr->size;
@@ -62,8 +67,48 @@ void* memory::FreeListAllocator::allocate(size_t n, uint8_t alignment) {
 
         freeBlock.asUintPtr += adjustment;
 
+        auto header = reinterpret_cast<AllocationHeader*>(freeBlock.asUintPtr - sizeof(AllocationHeader));
 
+        header->size = n;
+
+        header->adjustment = adjustment;
+
+        this->_size += totalSize;
+    
+        return reinterpret_cast<void*>(freeBlock.asPtr);
     }
 
     return nullptr;
+}
+
+void memory::FreeListAllocator::free(void *address) {
+    assert(address && "Forwarded nullptr!");
+
+    union {
+        void *asVoidPtr;
+
+        uintptr_t asUintPtr;
+    };
+
+    asVoidPtr = address;
+
+    auto header = reinterpret_cast<AllocationHeader*>(asUintPtr - sizeof(AllocationHeader));
+    
+    union {
+        FreeBlock* blockAsFreeBlock;
+        
+        uintptr_t blockAsUintPtr;
+    };    
+
+    blockAsUintPtr = asUintPtr - header->adjustment;
+
+    auto blockSize = header->size;
+
+    auto blockEnd = blockAsUintPtr + blockSize;
+
+    auto freeList = this->_head;
+
+    auto prevFreeList = nullptr;
+
+    
 }

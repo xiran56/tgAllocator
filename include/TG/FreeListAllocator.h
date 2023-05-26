@@ -22,7 +22,7 @@ namespace memory {
             struct AllocationHeader {
                 size_t size;
 
-                uint8_t alignment;
+                uint8_t adjustment;
             };
 
             struct FreeBlock {
