@@ -49,12 +49,8 @@ namespace memory {
 
             void deallocate(void *ptr, size_t objectsCount) noexcept {
                 assert(this->_policy && "Uninitialized allocation policy!");
-
-                for (auto i { 0u }; i < objectsCount; ++i) {
-                    this->_policy->free(reinterpret_cast<void*>(
-                                reinterpret_cast<uintptr_t>(ptr) + static_cast<uintptr_t>(sizeof(T) * i)
-                            ));
-                }
+            
+                this->_policy->free(ptr);
             }
 
             template<class U, class... Args>
