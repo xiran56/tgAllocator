@@ -1,10 +1,13 @@
 #pragma once
 
+#include <type_traits>
 #include <cstdint>
 #include <cassert>
 #include <new>
 
 namespace memory {
+    class LinearAllocator;
+
     /* Класс для совместиммости с контейнерами STL */
 
     template<class T, class AllocationPolicy>
@@ -48,9 +51,11 @@ namespace memory {
             }
 
             void deallocate(void *ptr, size_t objectsCount) noexcept {
-                assert(this->_policy && "Uninitialized allocation policy!");
+                if constexpr (!std::is_same_v<T, LinearAllocator>) {
+                    assert(this->_policy && "Uninitialized allocation policy!");
             
-                this->_policy->free(ptr);
+                    this->_policy->free(ptr);
+                }
             }
 
             template<class U, class... Args>
