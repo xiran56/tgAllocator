@@ -4,10 +4,9 @@
 #include <cstdint>
 #include <cassert>
 #include <new>
+#include "TG/fwd/LinearAllocator.h"
 
 namespace memory {
-    class LinearAllocator;
-
     /* Класс для совместиммости с контейнерами STL */
 
     template<class T, class AllocationPolicy>

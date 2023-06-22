@@ -3,7 +3,7 @@
 #include <cstddef>
 
 namespace memory {
-	/* Базовый класс аллокатора */
+    /* Базовый класс аллокатора */
 	
 	class AllocatorBaseImpl {
 		protected:
